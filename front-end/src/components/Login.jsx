@@ -21,7 +21,7 @@ const Login = () => {
   const onSubmit = async (data) => {
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/v1/users/login",
+        "http://194.238.22.78:8000/api/v1/users/login",
         
         data,
         { withCredentials: true },
