@@ -4,6 +4,7 @@ import axios from "axios";
 import SmallVideoCard from "../components/SmallVideoCard";
 import { useSelector } from "react-redux";
 import timeSince from "../utils/TimeSince";
+import { backend } from "../env";
 
 const VideoPlayer = () => {
   const userId = useSelector((state) => state.auth.user._id);
@@ -31,7 +32,7 @@ const VideoPlayer = () => {
   useEffect(() => {
     const fetchVideos = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/api/v1/videos");
+        const response = await axios.get(`${backend}/api/v1/videos`);
         const videosData = response.data.data.videos;
 
         // Fetch owner data for each video
@@ -39,7 +40,7 @@ const VideoPlayer = () => {
           videosData.map(async (video) => {
             try {
               const ownerResponse = await axios.get(
-                `http://localhost:8000/api/v1/users/${video.owner}`
+                `${backend}/api/v1/users/${video.owner}`
               ); // Fetch owner data by owner ID
               video.ownerName = ownerResponse.data.data.username;
               console.log(video);
@@ -65,7 +66,7 @@ const VideoPlayer = () => {
     const fetchVideoData = async () => {
       try {
         const videoResponse = await axios.get(
-          `http://localhost:8000/api/v1/videos/${id}`
+          `${backend}/api/v1/videos/${id}`
         );
         const videoData = videoResponse.data.data;
         console.log(videoData);
@@ -74,7 +75,7 @@ const VideoPlayer = () => {
 
         // Fetch owner's username
         const userData = await axios.get(
-          `http://localhost:8000/api/v1/users/${videoData.owner}`,
+          `${backend}/api/v1/users/${videoData.owner}`,
           { withCredentials: true }
         );
         const username = userData.data.data.username;
@@ -82,7 +83,7 @@ const VideoPlayer = () => {
 
         // Fetch owner's channel profile using ownerId
         const ownerResponse = await axios.get(
-          `http://localhost:8000/api/v1/users/c/${username}`,
+          `${backend}/api/v1/users/c/${username}`,
           { withCredentials: true }
         );
         const ownerData = ownerResponse.data.data;
@@ -94,7 +95,7 @@ const VideoPlayer = () => {
 
         // Fetch comments using id
         const commentsResponse = await axios.get(
-          `http://localhost:8000/api/v1/comments/${id}`,
+          `${backend}/api/v1/comments/${id}`,
           { withCredentials: true }
         );
         console.log(commentsResponse);
@@ -110,7 +111,7 @@ const VideoPlayer = () => {
                 comment.owner
               );
               const userResponse = await axios.get(
-                `http://localhost:8000/api/v1/users/${comment.owner}`,
+                `${backend}/api/v1/users/${comment.owner}`,
                 { withCredentials: true }
               );
               console.log("User response:", userResponse.data); // Should log user data
@@ -139,7 +140,7 @@ const VideoPlayer = () => {
     const fetchUserLikedVideos = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8000/api/v1/likes/videos",
+          `${backend}/api/v1/likes/videos`,
           { withCredentials: true }
         );
         const likedVideos = response.data.data;
@@ -159,7 +160,7 @@ const VideoPlayer = () => {
   const handleLike = async () => {
     try {
       await axios.patch(
-        `http://localhost:8000/api/v1/likes/toggle/v/${id}`,
+        `${backend}/api/v1/likes/toggle/v/${id}`,
         {},
         { withCredentials: true }
       );
@@ -178,7 +179,7 @@ const VideoPlayer = () => {
   const fetchPlaylists = async (userId) => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/api/v1/playlist/user/${userId}`,
+        `${backend}/api/v1/playlist/user/${userId}`,
         { withCredentials: true }
       );
       const unfilteredPlaylists = response.data.data;
@@ -195,7 +196,7 @@ const VideoPlayer = () => {
   const handleAddToPlaylist = async (playlistId, videoId) => {
     try {
       await axios.patch(
-        `http://localhost:8000/api/v1/playlist/add/${videoId}/${playlistId}`,
+        `${backend}/api/v1/playlist/add/${videoId}/${playlistId}`,
         {},
         {
           withCredentials: true,
@@ -212,7 +213,7 @@ const VideoPlayer = () => {
   const handleCreatePlaylist = async (videoId) => {
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/v1/playlist",
+        `${backend}/api/v1/playlist`,
         {
           name: newPlaylistName,
           videoId: videoId,
@@ -232,7 +233,7 @@ const VideoPlayer = () => {
   const handleSubscriptionToggle = async () => {
     try {
       const response = await axios.patch(
-        `http://localhost:8000/api/v1/subscriptions/c/${owner._id}`,
+        `${backend}/api/v1/subscriptions/c/${owner._id}`,
         {},
         { withCredentials: true }
       );
@@ -253,7 +254,7 @@ const VideoPlayer = () => {
     if (newComment.trim() === "") return;
     try {
       const response = await axios.post(
-        `http://localhost:8000/api/v1/comments/${id}`,
+        `${backend}/api/v1/comments/${id}`,
         {
           content: newComment,
         },
@@ -271,7 +272,7 @@ const VideoPlayer = () => {
   const handleCommentLike = async (commentId) => {
     try {
       const response = await axios.patch(
-        `http://localhost:8000/api/v1/likes/toggle/c/${commentId}`,
+        `${backend}/api/v1/likes/toggle/c/${commentId}`,
         {},
         { withCredentials: true }
       );
@@ -284,7 +285,7 @@ const VideoPlayer = () => {
   const handleCommentDelete = async (commentId) => {
     try {
       const response = await axios.delete(
-        `http://localhost:8000/api/v1/comments/c/${commentId}`,
+        `${backend}/api/v1/comments/c/${commentId}`,
         { withCredentials: true }
       );
       console.log(response.data);

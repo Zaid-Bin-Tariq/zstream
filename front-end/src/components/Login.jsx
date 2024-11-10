@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 import { loginSuccess } from '../redux/authSlice';
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { backend } from "../env";
 
 const Login = () => {
   const {
@@ -21,7 +22,7 @@ const Login = () => {
   const onSubmit = async (data) => {
     try {
       const response = await axios.post(
-        "http://194.238.22.78:8000/api/v1/users/login",
+        `${backend}/api/v1/users/login`,
         
         data,
         { withCredentials: true },

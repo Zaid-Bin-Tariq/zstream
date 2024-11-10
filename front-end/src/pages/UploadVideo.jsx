@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import { backend } from "../env";
 
 const UploadVideo = () => {
   // State to manage form inputs
@@ -33,7 +34,7 @@ const UploadVideo = () => {
     try {
       // POST request to upload video data
       const response = await axios.post(
-        "http://localhost:8000/api/v1/videos",
+        `${backend}/api/v1/videos`,
         formData,
         {
             headers: {

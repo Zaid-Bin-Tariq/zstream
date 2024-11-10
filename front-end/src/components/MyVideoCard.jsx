@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import { useSelector } from "react-redux";
+import { backend } from "../env";
 
 function MyVideoCard({ filteredVideos }) {
   const userId = useSelector((state) => state.auth.user._id);
@@ -33,7 +34,7 @@ function MyVideoCard({ filteredVideos }) {
 
   const handleDeleteClick = async (videoId) => {
     try {
-      await axios.delete(`http://localhost:8000/api/v1/videos/${videoId}`, {
+      await axios.delete(`${backend}/api/v1/videos/${videoId}`, {
         withCredentials: true,
       });
       alert("Video deleted successfully");
@@ -47,7 +48,7 @@ function MyVideoCard({ filteredVideos }) {
   const fetchPlaylists = async (userId) => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/api/v1/playlist/user/${userId}`,
+        `${backend}/api/v1/playlist/user/${userId}`,
         { withCredentials: true }
       );
       const unfilteredPlaylists = response.data.data;
@@ -64,7 +65,7 @@ function MyVideoCard({ filteredVideos }) {
   const handleAddToPlaylist = async (playlistId, videoId) => {
     try {
       await axios.patch(
-        `http://localhost:8000/api/v1/playlist/add/${videoId}/${playlistId}`,
+        `${backend}/api/v1/playlist/add/${videoId}/${playlistId}`,
         {},
         {
           withCredentials: true,
@@ -79,7 +80,7 @@ function MyVideoCard({ filteredVideos }) {
   const handleCreatePlaylist = async (videoId) => {
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/v1/playlist",
+        `${backend}/api/v1/playlist`,
         {
           name: newPlaylistName,
           videoId: videoId,

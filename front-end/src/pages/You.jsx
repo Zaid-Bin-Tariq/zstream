@@ -5,6 +5,7 @@ import axios from "axios";
 import MyVideos from "./MyVideos";
 import VideoCard from "../components/VideoCard";
 import MyVideoCard from "../components/MyVideoCard";
+import { backend } from "../env";
 const UserPage = () => {
   const user = useSelector((state) => state.auth.user);
   const [playlists, setPlaylists] = useState([]);
@@ -19,7 +20,7 @@ const UserPage = () => {
     const fetchPlaylist = async () => {
       try {
         const playlistResponse = await axios.get(
-          `http://localhost:8000/api/v1/playlist/user/${user._id}`,
+          `${backend}/api/v1/playlist/user/${user._id}`,
           { withCredentials: true }
         );
         const unfilteredPlaylists = playlistResponse.data.data;
@@ -33,7 +34,7 @@ const UserPage = () => {
             const videoId = playlist.videos[0];
 
             const videoResponse = await axios.get(
-              `http://localhost:8000/api/v1/videos/${videoId}`,
+              `${backend}/api/v1/videos/${videoId}`,
               { withCredentials: true }
             );
             const videoData = videoResponse.data.data;
@@ -57,7 +58,7 @@ const UserPage = () => {
     const fetchVideos = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8000/api/v1/users/c/${user.username}`,
+          `${backend}/api/v1/users/c/${user.username}`,
           { withCredentials: true }
         );
         console.log(response.data.data.videos);
@@ -67,7 +68,7 @@ const UserPage = () => {
           videosData.map(async (video) => {
             try {
               const ownerResponse = await axios.get(
-                `http://localhost:8000/api/v1/users/${video.owner}`
+                `${backend}/api/v1/users/${video.owner}`
               ); // Fetch owner data by owner ID
               video.ownerName = ownerResponse.data.data.username;
               console.log(video);

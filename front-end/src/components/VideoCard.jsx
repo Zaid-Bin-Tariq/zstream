@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import { useSelector } from "react-redux";
+import { backend } from "../env";
 
 function VideoCard({ filteredVideos }) {
   const userId = useSelector((state) => state.auth.user._id);
@@ -34,7 +35,7 @@ function VideoCard({ filteredVideos }) {
   const fetchPlaylists = async (userId) => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/api/v1/playlist/user/${userId}`,
+        `${backend}/api/v1/playlist/user/${userId}`,
         { withCredentials: true }
       );
       const unfilteredPlaylists = response.data.data;
@@ -51,7 +52,7 @@ function VideoCard({ filteredVideos }) {
   const handleAddToPlaylist = async (playlistId, videoId) => {
     try {
       await axios.patch(
-        `http://localhost:8000/api/v1/playlist/add/${videoId}/${playlistId}`,
+        `${backend}/api/v1/playlist/add/${videoId}/${playlistId}`,
         {},
         {
           withCredentials: true,
@@ -68,7 +69,7 @@ function VideoCard({ filteredVideos }) {
   const handleCreatePlaylist = async (videoId) => {
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/v1/playlist",
+        `${backend}/api/v1/playlist`,
         {
           name: newPlaylistName,
           videoId: videoId,

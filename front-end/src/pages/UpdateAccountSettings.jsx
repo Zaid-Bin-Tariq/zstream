@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import { backend } from "../env";
 
 const UpdateAccountSettings = () => {
   const [user, setUser] = useState(null); // State to store the fetched user data
@@ -20,7 +21,7 @@ const UpdateAccountSettings = () => {
     const fetchUser = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8000/api/v1/users/current-user",
+          `${backend}/api/v1/users/current-user`,
           {
             withCredentials: true,
           }
@@ -43,7 +44,7 @@ const UpdateAccountSettings = () => {
     try {
       setLoading(true);
       await axios.patch(
-        "http://localhost:8000/api/v1/users/update-account",
+        `${backend}/api/v1/users/update-account`,
         { fullName: username },
         { withCredentials: true }
       );
@@ -59,7 +60,7 @@ const UpdateAccountSettings = () => {
     try {
       setLoading(true);
       await axios.post(
-        "http://localhost:8000/api/v1/users/change-password",
+        `${backend}/api/v1/users/change-password`,
         { oldPassword, newPassword: password },
         { withCredentials: true }
       );
@@ -81,7 +82,7 @@ const UpdateAccountSettings = () => {
   
       // Axios request to upload the avatar
       await axios.patch(
-        "http://localhost:8000/api/v1/users/avatar",
+        `${backend}/api/v1/users/avatar`,
         formData, // Send formData with the file
         {
           headers: {
@@ -109,7 +110,7 @@ const UpdateAccountSettings = () => {
   
       // Axios request to upload the coverImage
       await axios.patch(
-        "http://localhost:8000/api/v1/users/cover-image",
+        `${backend}/api/v1/users/cover-image`,
         formData, // Send formData with the file
         {
           headers: {

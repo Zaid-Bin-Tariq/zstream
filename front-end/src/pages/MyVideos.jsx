@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import VideoCard from "../components/VideoCard";
+import { backend } from "../env";
 const MyVideos = () => {
   const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -15,7 +16,7 @@ const MyVideos = () => {
     const fetchVideos = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8000/api/v1/users/c/${"zaid%20chaudhary"}`,
+          `${backend}/api/v1/users/c/${"zaid%20chaudhary"}`,
           { withCredentials: true }
         );
         console.log(response.data.data.videos);
@@ -25,7 +26,7 @@ const MyVideos = () => {
           videosData.map(async (video) => {
             try {
               const ownerResponse = await axios.get(
-                `http://localhost:8000/api/v1/users/${video.owner}`
+                `${backend}/api/v1/users/${video.owner}`
               ); // Fetch owner data by owner ID
               video.ownerName = ownerResponse.data.data.username;
               console.log(video);

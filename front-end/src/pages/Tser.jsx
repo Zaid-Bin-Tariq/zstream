@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom"; // Import Link
 import axios from "axios";
 import VideoCard from "../components/VideoCard";
+import { backend } from "../env";
 
 const User = () => {
   const { username } = useParams(); // Extract the username from the URL
@@ -18,7 +19,7 @@ const User = () => {
     const fetchUserData = async () => {
       try {
         const userResponse = await axios.get(
-          `http://localhost:8000/api/v1/users/c/${username}`,
+          `${backend}/api/v1/users/c/${username}`,
           { withCredentials: true }
         );
         const user = userResponse.data.data;
@@ -29,7 +30,7 @@ const User = () => {
           videosData.map(async (video) => {
             try {
               const ownerResponse = await axios.get(
-                `http://localhost:8000/api/v1/users/${video.owner}`
+                `${backend}/api/v1/users/${video.owner}`
               ); // Fetch owner data by owner ID
               video.ownerName = ownerResponse.data.data.username;
               console.log(video);
@@ -45,7 +46,7 @@ const User = () => {
 
         // Fetch playlists using user ID
         const playlistResponse = await axios.get(
-          `http://localhost:8000/api/v1/playlist/user/${user._id}`,
+          `${backend}/api/v1/playlist/user/${user._id}`,
           { withCredentials: true }
         );
         const unfilteredPlaylists = playlistResponse.data.data;
@@ -59,7 +60,7 @@ const User = () => {
             // Fetch video data based on videoId from playlist
             const videoId = playlist.videos[0];
             const videoResponse = await axios.get(
-              `http://localhost:8000/api/v1/videos/${videoId}`,
+              `${backend}/api/v1/videos/${videoId}`,
               { withCredentials: true }
             );
             const videoData = videoResponse.data.data;

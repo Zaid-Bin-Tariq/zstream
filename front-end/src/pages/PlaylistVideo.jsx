@@ -4,6 +4,7 @@ import axios from "axios";
 import PlaylistVideoPlayer from "../components/PlaylistVideoPlayer";
 import VideoCard from "../components/VideoCard";
 import SmallVideoCard from "../components/SmallVideoCard";
+import { backend } from "../env";
 const PlaylistVideo = () => {
   const { playlistId } = useParams(); // Get the playlist ID from the URL
   const [playlist, setPlaylist] = useState(null); // State to store the fetched playlist data
@@ -16,7 +17,7 @@ const PlaylistVideo = () => {
     const fetchPlaylist = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8000/api/v1/playlist/${playlistId}`, // API endpoint to fetch playlist by ID
+          `${backend}/api/v1/playlist/${playlistId}`, // API endpoint to fetch playlist by ID
           { withCredentials: true } // Include credentials if necessary for authentication
         );
         setPlaylist(response.data.data);
@@ -27,7 +28,7 @@ const PlaylistVideo = () => {
           const videoData = await Promise.all(
             remainingIds.map(async (id) => {
               const response = await axios.get(
-                `http://localhost:8000/api/v1/videos/${id}`,
+                `${backend}/api/v1/videos/${id}`,
                 {
                   withCredentials: true,
                 }
@@ -41,7 +42,7 @@ const PlaylistVideo = () => {
             videoData.map(async (video) => {
               try {
                 const ownerResponse = await axios.get(
-                  `http://localhost:8000/api/v1/users/${video.owner}`
+                  `${backend}/api/v1/users/${video.owner}`
                 ); // Fetch owner data by owner ID
                 video.ownerName = ownerResponse.data.data.username;
                 console.log(video);

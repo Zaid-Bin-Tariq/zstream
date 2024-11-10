@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import { backend } from '../env';
 
 const VideoPlayer = () => {
   const { id } = useParams();
@@ -13,7 +14,7 @@ const VideoPlayer = () => {
   useEffect(() => {
     const fetchVideo = async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/api/v1/videos/${id}`);
+        const response = await axios.get(`${backend}/api/v1/videos/${id}`);
         setVideo(response.data.data.videoFile); // Assuming API returns the video data
         console.log(response.data.data);
         

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { backend } from "../env";
 
 const Subscriptions = () => {
   const userId = useSelector((state) => state.auth.user._id);
@@ -15,7 +16,7 @@ const Subscriptions = () => {
       try {
         //setLoading(true); // Start loading
         const response = await axios.get(
-          `http://localhost:8000/api/v1/subscriptions/c/${userId}`,
+          `${backend}/api/v1/subscriptions/c/${userId}`,
           {
             withCredentials: true, // Include credentials if needed for authentication
           }
