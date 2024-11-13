@@ -76,9 +76,9 @@ function SmallVideoCard({ filteredVideos }) {
       );
       const newPlaylist = response.data;
       console.log(response.data);
-      
+      setShowModal(false)
       // After creating a new playlist, add the video to the newly created playlist
-      await handleAddToPlaylist(playlistId, selectedVideoId);
+      
     } catch (error) {
       console.error("Error creating playlist", error);
     }

@@ -93,14 +93,14 @@ const UserPage = () => {
   console.log(videos);
 
   return (
-    <div className="min-h-screen flex flex-col items-center bg-gray-100 w-full">
+    <div className="min-h-screen flex flex-col items-center bg-gray-100 w-full mt-[-32px]">
       <div className="bg-white shadow-lg rounded-lg p-6 w-full">
         <div className="relative">
           {user?.coverImage && (
             <img
               src={user.coverImage}
               alt="Cover"
-              className="w-full h-64 object-cover"
+              className="w-full h-64 object-cover rounded-xl"
             />
           )}
 
@@ -124,10 +124,10 @@ const UserPage = () => {
         <p className="mb-6">{videos.length} videos</p>
 
         {/* Navigation Buttons */}
-        <div className="flex gap-6 mb-6">
+        <div className="flex gap-3 mb-6">
           <button
             onClick={() => setSelectedSection("playlists")}
-            className={`px-4 py-2 rounded ${
+            className={`px-2 py-2 rounded-xl text-xs ${
               selectedSection === "playlists"
                 ? "bg-blue-500 text-white"
                 : "bg-gray-200"
@@ -137,7 +137,7 @@ const UserPage = () => {
           </button>
           <button
             onClick={() => setSelectedSection("myVideos")}
-            className={`px-4 py-2 rounded ${
+            className={`px-2 py-2 rounded-xl text-xs ${
               selectedSection === "myVideos"
                 ? "bg-blue-500 text-white"
                 : "bg-gray-200"
@@ -146,12 +146,12 @@ const UserPage = () => {
             My Videos
           </button>
           <Link to="/UploadVideo">
-            <button className="bg-gray-200 py-2 px-4 rounded">
+            <button className="bg-gray-200 py-2 px-2 rounded-xl text-xs">
               Upload Video
             </button>
           </Link>
           <Link to="/UpdateAccount">
-            <button className="bg-gray-200 py-2 px-4 rounded">
+            <button className="bg-gray-200 py-2 px-2 rounded-xl text-xs">
               Update Account Settings
             </button>
           </Link>

@@ -90,14 +90,14 @@ const User = () => {
   if (error) return <div>{error}</div>;
 
   return (
-    <div className="min-h-screen flex flex-col items-center bg-gray-100 w-full">
+    <div className="min-h-screen flex flex-col items-center bg-gray-100 w-full mt-[-32px]">
       <div className="bg-white shadow-lg rounded-lg p-6 w-full">
         <div className="relative">
           
             <img
               src={user.coverImage}
               alt="Cover Image"
-              className="w-full h-64 object-cover"
+              className="w-full h-64 object-cover rounded-xl"
             />
           
 
@@ -121,10 +121,10 @@ const User = () => {
         <p className="mb-6">{videos.length} videos</p>
 
         {/* Navigation Buttons */}
-        <div className="flex gap-6 mb-6">
+        <div className="flex gap-3 mb-6">
           <button
             onClick={() => setSelectedSection("Videos")}
-            className={`px-4 py-2 rounded ${
+            className={`px-4 py-2 rounded-xl text-xs ${
               selectedSection === "Videos"
                 ? "bg-blue-500 text-white"
                 : "bg-gray-200"
@@ -134,7 +134,7 @@ const User = () => {
           </button>
           <button
             onClick={() => setSelectedSection("playlists")}
-            className={`px-4 py-2 rounded ${
+            className={`px-4 py-2 rounded-xl text-xs ${
               selectedSection === "playlists"
                 ? "bg-blue-500 text-white"
                 : "bg-gray-200"

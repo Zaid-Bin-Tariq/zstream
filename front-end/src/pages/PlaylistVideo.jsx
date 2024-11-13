@@ -79,8 +79,8 @@ const PlaylistVideo = () => {
   if (error) return <div>{error}</div>;
 
   return (
-    <div className="flex flex-col md:flex-row">
-      <div className="w-full p-5 md:w-2/3">
+    <div className="flex flex-col mt-[-32px] md:flex-row md:mt-0">
+      <div className="w-full md:p-5 md:w-2/3">
         <PlaylistVideoPlayer id={playlist.videos[0]} />
       </div>
 

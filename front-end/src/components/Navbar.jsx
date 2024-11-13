@@ -10,6 +10,7 @@ import { backend } from "../env";
 const Navbar = () => {
   const [userData, setUserData] = useState({});
   const dispatch = useDispatch();
+  const navigate = useNavigate()
 
   // Logout handler
   const handleLogout = async () => {
@@ -28,27 +29,27 @@ const Navbar = () => {
     }
   };
 
-  const isLoggedIn = false;
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn) ;
 
   return (
-    <nav className="bg-white shadow-md py-4 px-4">
-      <div className="flex justify-between items-center">
+    <nav className="bg-white shadow-md py-4 px-4 w-full">
+      <div className="flex justify-between items-center w-full">
         <div className="flex space-x-4">
           <Link
             to="/"
-            className="text-gray-700 font-semibold hover:text-blue-500"
+            className="text-gray-700 font-semibold hover:text-blue-500 md:text-lg text-xs"
           >
             Home
           </Link>
           <Link
             to="/subscriptions"
-            className="text-gray-700 font-semibold hover:text-blue-500"
+            className="text-gray-700 font-semibold hover:text-blue-500 md:text-lg text-xs"
           >
             Subscriptions
           </Link>
           <Link
             to="/you"
-            className="text-gray-700 font-semibold hover:text-blue-500"
+            className="text-gray-700 font-semibold hover:text-blue-500 md:text-lg text-xs"
           >
             You
           </Link>
@@ -58,7 +59,7 @@ const Navbar = () => {
           {isLoggedIn ? (
             <button
               onClick={handleLogout}
-              className="bg-red-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-red-600"
+              className="bg-red-500 text-white font-bold py-2 px-4 rounded-xl md:text-lg text-xs hover:bg-red-600"
             >
               Logout
             </button>
@@ -66,13 +67,13 @@ const Navbar = () => {
             <>
               <Link
                 to="/login"
-                className="bg-blue-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-600"
+                className="bg-blue-500 text-white font-bold py-2 px-4 rounded-xl md:text-lg text-xs hover:bg-blue-600"
               >
                 Login
               </Link>
               <Link
                 to="/signup"
-                className="bg-green-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-green-600"
+                className="bg-green-500 text-white font-bold py-2 px-4 rounded-xl md:text-lg text-xs hover:bg-green-600"
               >
                 Signup
               </Link>

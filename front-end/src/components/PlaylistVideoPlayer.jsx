@@ -18,22 +18,20 @@ function PlaylistVideoPlayer({ id }) {
   const [loading, setLoading] = useState(true);
   const [newComment, setNewComment] = useState("");
   const [commentUpdated, setCommentUpdated] = useState(null);
+  const [showComments, setShowComments] = useState(false); // New state
   const [likedVideos, setLikedVideos] = useState(null);
   const [isLiked, setIsLiked] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [playlists, setPlaylists] = useState([]);
   const [newPlaylistName, setNewPlaylistName] = useState("");
   const [selectedVideoId, setSelectedVideoId] = useState(null);
-  const [commentDelete, setCommentDelete] = useState(true)
-
+  const [commentDelete, setCommentDelete] = useState(true);
 
   useEffect(() => {
     // Fetch video by id
     const fetchVideoData = async () => {
       try {
-        const videoResponse = await axios.get(
-          `${backend}/api/v1/videos/${id}`
-        );
+        const videoResponse = await axios.get(`${backend}/api/v1/videos/${id}`);
         const videoData = videoResponse.data.data;
         console.log(videoData);
 
@@ -105,10 +103,9 @@ function PlaylistVideoPlayer({ id }) {
 
     const fetchUserLikedVideos = async () => {
       try {
-        const response = await axios.get(
-          `${backend}/api/v1/likes/videos`,
-          { withCredentials: true }
-        );
+        const response = await axios.get(`${backend}/api/v1/likes/videos`, {
+          withCredentials: true,
+        });
         const likedVideos = response.data.data;
         setLikedVideos(response.data.data);
 
@@ -149,9 +146,9 @@ function PlaylistVideoPlayer({ id }) {
         { withCredentials: true }
       );
       const unfilteredPlaylists = response.data.data;
-      setPlaylists(unfilteredPlaylists.filter(
-        (playlist) => playlist.videos.length > 0
-      ));
+      setPlaylists(
+        unfilteredPlaylists.filter((playlist) => playlist.videos.length > 0)
+      );
       console.log(response.data.data);
       // Assuming response has the list of playlists
     } catch (error) {
@@ -202,7 +199,7 @@ function PlaylistVideoPlayer({ id }) {
         { withCredentials: true }
       );
       console.log(response.data);
-      
+
       setSubscriptionStatus(response.data.subscribed);
       console.log("done");
 
@@ -251,7 +248,7 @@ function PlaylistVideoPlayer({ id }) {
         { withCredentials: true }
       );
       console.log(response.data);
-      setCommentDelete(!commentDelete)
+      setCommentDelete(!commentDelete);
     } catch (err) {
       console.error("comment deleting error:");
     }
@@ -263,168 +260,212 @@ function PlaylistVideoPlayer({ id }) {
   if (error) return <div>{error}</div>;
 
   return (
-    <div className="flex w-full">
+    <div className="w-full">
       <div className="flex-col">
-        {/* Video Player */}
-        <video
-          src={video.videoFile}
-          controls
-          className="w-full rounded-xl"
-        ></video>
-
-        {/* Title */}
-        <h2 className="text-3xl font-bold mt-2">{video.title}</h2>
-
-        {/* Owner info */}
-        <div className="flex items-center my-3">
-          <img
-            src={owner.avatar}
-            alt="Owner Avatar"
-            className="w-12 h-12 rounded-full"
-          />
-          <div className="ml-3">
-            <p>{owner.username}</p>
-
-            <p className="text-gray-500">
-              {owner.subscribersCount} subscribers
-            </p>
-          </div>
-          <button
-            onClick={handleSubscriptionToggle}
-            className="bg-blue-500 text-white px-3 py-1 rounded mt-1 ml-4"
-          >
-            {subscriptionStatus ? "Unsubscribe" : "Subscribe"}
-          </button>
-          <button
-            onClick={handleLike}
-            className={`ml-5 px-3 py-1 rounded ${
-              isLiked ? "bg-blue-500 text-white" : "bg-gray-200"
-            }`}
-          >
-            Like
-          </button>
-          <p className="ml-2">{video.likesCount} likes</p>
-          <button
-            onClick={() => handleSaveClick(video._id, userId)}
-            className="ml-5 bg-gray-200 text-black px-3 py-1 rounded"
-          >
-            Save
-          </button>
+        <div>
+          {/* Video Player */}
+          <video
+            src={video.videoFile}
+            controls
+            className="md:w-full w-full md:rounded-xl"
+          ></video>
+          <h2 className="text-3xl font-bold mt-2 ml-5">{video.title}</h2>
         </div>
 
-        {/* Video metadata */}
-        <p className="mt-2 font-bold">
-        {timeSince(new Date(video.createdAt))} ago {" "}
-        </p>
+        <div className="px-5">
+          {/* Title */}
 
-        {/* Video description */}
-        <p className="">{video.description}</p>
-
-        {showModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center overflow-auto">
-            <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-              <h2 className="text-lg font-bold mb-4">Save to Playlist</h2>
-
-              {/* List of existing playlists */}
-              <ul className="mb-4">
-                {playlists.map((playlist) => (
-                  <li
-                    key={playlist._id}
-                    className="cursor-pointer mb-2 hover:bg-gray-100 p-2 rounded"
-                    onClick={() =>
-                      handleAddToPlaylist(playlist._id, selectedVideoId)
-                    }
-                  >
-                    {playlist.name}
-                  </li>
-                ))}
-              </ul>
-
-              {/* Create new playlist */}
-              <input
-                type="text"
-                placeholder="New playlist name"
-                value={newPlaylistName}
-                onChange={(e) => setNewPlaylistName(e.target.value)}
-                className="border p-2 w-full mb-4"
+          {/* Owner info */}
+          <div className="flex flex-col md:flex-row md:gap-3 md:items-center my-3">
+            <div className="image-line flex">
+              <img
+                src={owner.avatar}
+                alt="Owner Avatar"
+                className="w-12 h-12 rounded-full"
               />
-              <button
-                onClick={() => handleCreatePlaylist(selectedVideoId)}
-                className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
-              >
-                Create Playlist
-              </button>
+              <div className="ml-3">
+                <p className="font-bold">{owner.username}</p>
 
-              {/* Close Modal */}
+                <p className="text-gray-500">
+                  {owner.subscribersCount} subscribers
+                </p>
+              </div>
+            </div>
+            <div className="btn-line flex mt-4 justify-between">
               <button
-                onClick={() => setShowModal(false)}
-                className="text-red-500 mt-4 hover:underline ml-4"
+                onClick={handleSubscriptionToggle}
+                className="bg-blue-500 text-white px-3 py-1 rounded-xl text-sm"
               >
-                Cancel
+                {subscriptionStatus ? "Unsubscribe" : "Subscribe"}
+              </button>
+              <div className="flex gap-1 items-center">
+                <button
+                  onClick={handleLike}
+                  className={`ml-5 px-3 py-1 rounded-xl text-sm ${
+                    isLiked ? "bg-blue-500 text-white" : "bg-gray-200"
+                  }`}
+                >
+                  Like
+                </button>
+                <p className="">{video.likesCount} likes</p>
+              </div>
+              <button
+                onClick={() => handleSaveClick(video._id, userId)}
+                className="ml-5 bg-gray-200 text-black px-3 py-1 rounded-xl text-sm"
+              >
+                Save
               </button>
             </div>
           </div>
-        )}
 
-        {/* Comment input */}
-        <div className="mt-5 flex gap-2">
-          <input
-            type="text"
-            placeholder="Add a comment..."
-            value={newComment}
-            onChange={(e) => setNewComment(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded"
-          />
-          <button
-            onClick={handleCommentSubmit}
-            className="bg-blue-500 text-white px-3 rounded"
-          >
-            Post
-          </button>
-        </div>
+          {/* Video metadata */}
+          <p className="mt-2 text-sm text-gray-500">
+            {timeSince(new Date(video.createdAt))} ago{" "}
+          </p>
 
-        {/* Comments section */}
-        <div className="mt-5">
-          {comments.length > 0 ? (
-            comments.map((comment) => (
-              <div key={comment._id} className="mb-5">
-                <div className="flex items-center">
-                  <img
-                    src={comment.avatar}
-                    alt="Commenter Avatar"
-                    className="w-10 h-10 rounded-full"
+          {/* Video description */}
+          <p className="">{video.description}</p>
+
+          {showModal && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center overflow-auto">
+              <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+                <h2 className="text-lg font-bold mb-4">Save to Playlist</h2>
+
+                {/* List of existing playlists */}
+                <ul className="mb-4">
+                  {playlists.map((playlist) => (
+                    <li
+                      key={playlist._id}
+                      className="cursor-pointer mb-2 hover:bg-gray-100 p-2 rounded"
+                      onClick={() =>
+                        handleAddToPlaylist(playlist._id, selectedVideoId)
+                      }
+                    >
+                      {playlist.name}
+                    </li>
+                  ))}
+                </ul>
+
+                {/* Create new playlist */}
+                <input
+                  type="text"
+                  placeholder="New playlist name"
+                  value={newPlaylistName}
+                  onChange={(e) => setNewPlaylistName(e.target.value)}
+                  className="border p-2 w-full mb-4"
+                />
+                <button
+                  onClick={() => handleCreatePlaylist(selectedVideoId)}
+                  className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+                >
+                  Create Playlist
+                </button>
+
+                {/* Close Modal */}
+                <button
+                  onClick={() => setShowModal(false)}
+                  className="text-red-500 mt-4 hover:underline ml-4"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Comment input */}
+          <div className="mt-5 md:flex hidden gap-2">
+            <input
+              type="text"
+              placeholder="Add a comment..."
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+              className="w-full p-2 border border-gray-300 rounded"
+            />
+            <button
+              onClick={handleCommentSubmit}
+              className="bg-blue-500 text-white px-3 rounded"
+            >
+              Post
+            </button>
+          </div>
+
+          {/* Comments section */}
+          <div className="">
+            {/* Comment Toggle Button for mobile */}
+            <div className="mt-5 md:hidden">
+              {" "}
+              {/* Hide this on larger screens */}
+              <button
+                onClick={() => setShowComments(!showComments)}
+                className="bg-gray-200 px-4 py-2 text-xs rounded-xl"
+              >
+                {showComments ? "Hide Comments" : "Show Comments"}
+              </button>
+            </div>
+
+            {/* Conditionally render comments based on toggle */}
+            {(showComments || window.innerWidth >= 768) && ( // Show comments if toggled or on larger screens
+              <div className="mt-5">
+                <div className="flex gap-2 md:hidden">
+                  <input
+                    type="text"
+                    placeholder="Add a comment..."
+                    value={newComment}
+                    onChange={(e) => setNewComment(e.target.value)}
+                    className="w-full p-2 border border-gray-300 rounded"
                   />
-                  <div className="ml-3">
-                    <div className="flex gap-3 items-center">
-                      <p>{comment.username}</p>
-                      <p className="text-gray-500 text-sm">
-                        {new Date(comment.createdAt).toLocaleDateString()}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="mt-1">{comment.content}</p>
-                    </div>
-                  </div>
+                  <button
+                    onClick={handleCommentSubmit}
+                    className="bg-blue-500 text-white px-3 rounded"
+                  >
+                    Post
+                  </button>
                 </div>
 
-                <div className="flex space-x-3 mt-1 ml-12">
-                  
-                  {comment.owner === userId && (
-                    <div className="flex space-x-3 mt-1 ml-12">
-                      <button
-                        onClick={() => handleCommentDelete(comment._id)}
-                        className="text-red-500"
-                      >
-                        Delete
-                      </button>
-                    </div>
+                {/* Render comments */}
+                <div className="mt-5">
+                  {comments.length > 0 ? (
+                    comments.map((comment) => (
+                      <div key={comment._id} className="mb-5">
+                        <div className="flex items-center">
+                          <img
+                            src={comment.avatar}
+                            alt="Commenter Avatar"
+                            className="w-10 h-10 rounded-full"
+                          />
+                          <div className="ml-3">
+                            <div className="flex gap-3 items-center">
+                              <p className="font-semibold">
+                                {comment.username}
+                              </p>
+                              <p className="text-gray-500 text-sm">
+                                {new Date(
+                                  comment.createdAt
+                                ).toLocaleDateString()}
+                              </p>
+                            </div>
+                            <div>
+                              <p className="">{comment.content}</p>
+                            </div>
+                          </div>
+                        </div>
+                        {comment.owner === userId && (
+                          <button
+                            onClick={() => handleCommentDelete(comment._id)}
+                            className="text-red-500 text-xs ml-14"
+                          >
+                            Delete
+                          </button>
+                        )}
+                      </div>
+                    ))
+                  ) : (
+                    <p>No comments yet</p>
                   )}
                 </div>
               </div>
-            ))
-          ) : (
-            <p>No comments yet</p>
-          )}
+            )}
+          </div>
         </div>
       </div>
     </div>
