@@ -8,6 +8,7 @@ cloudinary.config({
   cloud_name: CLOUDINARY_CLOUD_NAME,
   api_key: CLOUDINARY_API_KEY,
   api_secret: CLOUDINARY_API_SECRET,
+  secure: true
 });
 
 const uploadOnCloudinary = async (localFilePath) => {
@@ -15,6 +16,7 @@ const uploadOnCloudinary = async (localFilePath) => {
     if (!localFilePath) return null;
     const response = await cloudinary.uploader.upload(localFilePath, {
       resource_type: "auto",
+      secure: true
     });
     console.log("File uploaded", response.url);
     // once uploaded remove file from server
